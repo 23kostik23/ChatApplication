@@ -1,0 +1,22 @@
+﻿@page
+@model WebApplication1.Pages.LoginModel
+@{
+	ViewData["Title"] = "Login page";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>LOGIN HERE.</p>
+
+@if(HttpContext.Session.GetInt32("UserId") == null) {
+    <div class="form-box login-box" id="form-box login-box">
+        <form method="post">
+            <input type="text" asp-for="Username" placeholder="Username" required>
+            <input type="password" asp-for="Password" placeholder="Password" required>
+            <button type="submit" id="submit_login_button">Login</button>
+            <p>Don't have an account? <a href="/Register">Register</a></p>
+        </form>
+    </div>
+}
+else {
+    <h1>You logged in as user by id: @HttpContext.Session.GetInt32("UserId")</h1>
+}

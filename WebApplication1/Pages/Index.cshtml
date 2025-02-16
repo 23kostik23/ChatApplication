@@ -1,0 +1,105 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@if (@HttpContext.Session.GetInt32("UserId") == null)
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
+}
+else
+{
+    <div class="messenger-container">
+        <div class="sidebar">
+            <h3>Contacts</h3>
+
+            <!-- Форма добавления пользователя -->
+            <div class="add-user">
+                <input type="text" id="newUserName" placeholder="Enter username...">
+                <button onclick="addUser()">Add</button>
+            </div>
+
+            <!-- Список пользователей -->
+            <ul id="userList">
+                @foreach (var user in Model.Users)
+                {
+                    <li>
+                        <form method="post">
+                            <input type="hidden" name="username" value="@user" />
+                            <button type="submit" asp-page-handler="SelectUser">@user</button>
+                        </form>
+                    </li>
+                }
+            </ul>
+
+        </div>
+
+        <!-- Основная чат-панель -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>@(HttpContext.Session.GetInt32("ReceiverId") == 0 ? "Select user" : $"Chatting with {Model.ReceiverUsername}")</h3>
+            </div>
+            <div class="chat-box">
+                @foreach (var message in Model.Messages)
+                {
+                    <div class="message @(message.IsSent ? "sent" : "received")">
+                        <div class="message-content">
+                            <p>@message.Text</p>
+                            <span class="timestamp">@message.Timestamp.ToString("HH:mm")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+            @if (HttpContext.Session.GetInt32("ReceiverId") != 0)
+            {
+                <form method="post">
+                    <input type="text" name="message" placeholder="Enter something...">
+                    <button type="submit" asp-page-handler="SendMessage">Send</button>
+                </form>
+            }
+        </div>
+
+    </div>
+    <style>
+
+        .message {
+            margin: 10px 0;
+            display: flex;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        /* Стили для полученных сообщений */
+        .received .message-content {
+            background: #f1f0f0;
+            margin-right: auto;
+        }
+
+        /* Стили для отправленных сообщений */
+        .sent .message-content {
+            background: #0084ff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .timestamp {
+            display: block;
+            font-size: 0.75em;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .sent .timestamp {
+            color: #e0e0e0;
+        }
+    </style>
+}

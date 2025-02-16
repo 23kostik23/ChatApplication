@@ -1,0 +1,18 @@
+﻿@page
+@model WebApplication1.Pages.RegisterModel
+@{
+	ViewData["Title"] = "Register page";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>REGISTER HERE.</p>
+
+<div class="form-box register-box hidden" id="form-box register-box">
+    <form method="post">
+        <input type="text" asp-for="Username" placeholder="Username" required>
+        <input type="password" asp-for="Password" placeholder="Password" required>
+        <input type="password" asp-for="ConfirmPassword" placeholder="Confirm password" required>
+        <button type="submit" id="submit_register_button">Register</button>
+        <p>Already have an account? <a href="/Login">Login</a></p>
+    </form>
+</div>
